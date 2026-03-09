@@ -77,6 +77,16 @@ export function createCountryCard(
         ${country.name.common}
       </h2>
 
+      <!-- Botón de favoritos -->
+      <button 
+        class="favorite-btn text-yellow-400 hover:text-yellow-600" 
+        data-code="${country.cca3}" 
+        type="button">
+        ⭐
+      </button>
+
+
+
       <!-- Nombre oficial (si es diferente) -->
       ${
         country.name.official !== country.name.common

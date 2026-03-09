@@ -35,6 +35,7 @@ import { searchCountries, ApiError, getCountriesByRegion, getAllCountries } from
 import { renderCountryList } from './components/CountryCard';
 import { openModal } from './components/CountryModal';
 import { getRequiredElement, showElement, hideElement, onDOMReady, debounce } from './utils/dom';
+import { addFavorite, removeFavorite, getFavorites } from "./utils/favorites";
 
 // =============================================================================
 // ESTADO DE LA APLICACIÓN
@@ -140,6 +141,24 @@ function render(state: UiState): void {
       } else {
         showElement(countriesList);
         renderCountryList(state.data, countriesList, handleCountryClick);
+         document.querySelectorAll(".favorite-btn").forEach(btn => {
+          btn.addEventListener("click", (e) => {
+            e.preventDefault();      // evita redirección
+            e.stopPropagation();     // evita que se dispare el evento de la carta
+
+            const code = (e.currentTarget as HTMLButtonElement).dataset.code!;
+            const country = state.data!.find(c => c.cca3 === code);
+
+            if (country) {
+              if (getFavorites().some(f => f.cca3 === code)) {
+                removeFavorite(code);
+              } else {
+                addFavorite(country);
+              }
+              console.log("Favoritos:", getFavorites());
+            }
+          });
+        });
       }
       break;
 
@@ -253,7 +272,6 @@ async function handleSearch(): Promise<void> {
   }
 }
 
-
 /**
  * Maneja el click en una tarjeta de país.
  * Abre el modal con los detalles del país.
@@ -306,6 +324,12 @@ function setupEventListeners(): void {
   regionSelect.addEventListener("change", () => {
     selectedRegion = regionSelect.value as typeof selectedRegion;
     void handleSearch();
+  });
+
+  //manejo de favoritos
+  document.getElementById("show-favorites")!.addEventListener("click", () => {
+    const favs = getFavorites();
+    renderCountryList(favs, document.getElementById("favorites-container")!, handleCountryClick);
   });
 
 
