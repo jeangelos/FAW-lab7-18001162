@@ -15,6 +15,7 @@
 import type { Country } from '../types/country';
 import { formatNumber, formatCapitals } from '../utils/format';
 import { createElement } from '../utils/dom';
+import { addFavorite, removeFavorite, getFavorites } from '../utils/favorites';
 
 /**
  * Crea una tarjeta de país para mostrar en la lista.
@@ -143,6 +144,27 @@ export function createCountryCard(
       onClick(country);
     }
   });
+
+  // Manejador del botón de favoritos: lo manejamos dentro del componente
+  // para garantizar que se llame a stopPropagation() antes que el handler
+  // del contenedor y así evitar abrir el modal accidentalmente.
+  const favBtn = card.querySelector('.favorite-btn') as HTMLButtonElement | null;
+  if (favBtn) {
+    favBtn.addEventListener('click', (e: MouseEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+
+      const code = favBtn.dataset.code!;
+
+      if (getFavorites().some(f => f.cca3 === code)) {
+        removeFavorite(code);
+      } else {
+        addFavorite(country);
+      }
+
+      console.log('Favoritos:', getFavorites());
+    });
+  }
 
   return card;
 }

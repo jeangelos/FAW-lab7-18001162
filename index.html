@@ -67,7 +67,7 @@
             <button id="show-favorites" class="px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-slate-900">
               Ver Favoritos
             </button>
-            <div id="favorites-container"></div>
+            
           </div>
         </div>
       </header>
@@ -113,6 +113,14 @@
         <!-- Lista de países -->
         <section id="countriesList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           <!-- Los países se renderizarán aquí dinámicamente -->
+        </section>
+
+        <!-- Sección de favoritos (renderizada al hacer click en "Ver Favoritos") -->
+        <section id="favoritesSection" class="mt-8">
+          <h3 class="text-white text-xl mb-4">Favoritos</h3>
+          <div id="favorites-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- Favoritos renderizados aquí -->
+          </div>
         </section>
 
         <!-- Modal de detalle del país -->
