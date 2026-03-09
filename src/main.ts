@@ -179,7 +179,7 @@ function render(state: UiState): void {
  */
 async function handleSearch(): Promise<void> {
   const query = searchInput.value.trim();
-
+  console.log("Query:",query, "Region:", selectedRegion);
   // Si la búsqueda está vacía, volvemos al estado inicial
   if (query.length === 0) {
     render({ status: 'idle' });
@@ -213,21 +213,22 @@ async function handleSearch(): Promise<void> {
     // Si la Promise se rechaza, el error se captura en el catch.
     // =========================================================================
     let countries: Country[] = [];
-
-  if (selectedRegion !== "all" && query.length === 0) {
-    const countries = await getAllCountries();
-    render({ status: 'success', data: countries });
-    lastSearchQuery = '';
-    return;
-
-  } else {
-    countries = await searchCountries(query);
-
-    // filtro de regiones
-    if (selectedRegion !== "all") {
+    if (query === "" && selectedRegion === "all") {
+      //Mostrar todos los países
+      countries = await getAllCountries();
+    } else if (query === "" && selectedRegion !== "all") {
+      //Solo región
+      countries = await getCountriesByRegion(selectedRegion);
+    } else if (query !== "" && selectedRegion === "all") {
+      //Solo búsqueda
+      countries = await searchCountries(query);
+    } else {
+      //Búsqueda con región
+      countries = await searchCountries(query);
       countries = countries.filter(c => c.region === selectedRegion);
     }
-  }
+
+ 
 
 
     if (countries.length === 0) {
